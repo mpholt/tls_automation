@@ -1,0 +1,38 @@
+# Overview
+Author: Matthew Holt
+Date (Interview): Tuesday, September 11, 2024
+
+This program is a command-line executable that automates the TLS configuration for a stand-alone Tomcat 11.
+
+Tomcat can be deployed in a variety of methods such as stand-alone, embedded in another application, or bundled with an application produced by a framework such as Spring Boot.
+
+For many Enterprise, self-hosted applications, customers manage and maintain a standalone Tomcat that can host multiple webapps easily. For this implementation, we are assuming a standalone Tomcat is being configured as it may be a more common Enterprise deployment.
+
+A method was quickly prototyped for supporting configuration using an embedded Tomcat as well. This method is easier to control the end-user experience, as it can utilize the Tomcat API to configure TLS without a server reboot. This also allows you to easily navigate an admin user through the configuration using your existing UI and database persistence. More info on this is detailed in Alternative Implementations below.
+
+# Design considerations
+When altering a standalone Tomcat, the safest and most reliable method of configuring TLS support is via programmatically modifying the server.xml file.
+
+There are a variety of methods and options for configuring TLS (Keystore, PEM, etc). For this example, we are focusing on a keystore implementation.
+
+## Backup
+Since we are modifying a server.xml, before any modifications occur a backup is created within the same directory (server.<TIMESTAMP>.bak).
+
+## Input validation
+A base-level of input validation is performed for the parameters. Additional could easily be extended if we want to further enforce validation such as preventing a default keystore password (“changeit”) from being used.
+
+# Next Steps:
+Ideally, would like to improve upon the user experience of the existing implementation. CLI should continue to be supported as many application administrators prefer CLI options as they are repeatable, scriptable, etc.
+
+However, would like to offer a configuration UI which would aim to simplify and streamline the workflow.
+
+My time this last week has been fairly constrained, so wanted to focus on accomplishing the core goals before moving to UI and other features.
+
+Additionally, extended support for other TLS configuration options and features such as a change diff and auto-reload/start of Tomcat would be good next steps to further build out the capabilities.
+
+# Alternative implementations:
+Tomcat is often bundled with an application. Spring Boot does this by default, bundling Tomcat in the final .jar executable which makes it easier to spin up self-contained micro-services or other applications.
+
+Tomcat provides an API that can be used to configure TLS and other features during run-time. This makes it possible to provide a more seamless configuration experience for the end-user. If your application already has a UI you can extend it to handle the initial Tomcat configuration. This would be preferably server-side, front-end would also work but there are additional security considerations when configuring an app via a front-end UI.
+
+A quick prototype of what this looks like is in the Embedded.java example.
