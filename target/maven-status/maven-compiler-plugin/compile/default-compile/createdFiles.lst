@@ -1,0 +1,5 @@
+com/sas/standalone/FileHandler.class
+com/sas/standalone/App.class
+com/sas/standalone/AppService.class
+com/sas/standalone/ConfigurationManager.class
+com/sas/embedded/Embedded.class
